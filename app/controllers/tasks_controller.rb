@@ -4,7 +4,8 @@ class TasksController < ApplicationController
 
   # LIST TASKS (GET: /tasks)
   def index
-    @tasks = @user.tasks.all
+    # @tasks = @user.tasks.all
+    @tasks = @user.tasks.ransack(params[:q]).result
     render json: @tasks
   end
 
