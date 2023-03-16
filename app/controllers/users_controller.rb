@@ -22,8 +22,8 @@ class UsersController < ApplicationController
     # end
 
     # check password đã nếu confirm mới cho update nhé
-    if @user && @user.authenticate(user_params_u[:password])
-      if @user.update(nickname: params['user']['nickname'], password: params['user']['password_n'])
+    if @user && @user.authenticate(params['user'][:password_confirm])
+      if @user.update(user_params_u)
         render json: @user, status: 200
         # binding.pry
       else
