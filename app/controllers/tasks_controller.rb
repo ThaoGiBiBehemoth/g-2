@@ -1,12 +1,17 @@
 class TasksController < ApplicationController
+  include Pagy::Backend
   before_action :authorize
   before_action :set_task, only: [:show, :update, :destroy]
 
   # LIST TASKS (GET: /tasks)
   def index
     # @tasks = @user.tasks.all
-    @tasks = @user.tasks.ransack(params[:q]).result
-    render json: @tasks
+    # @tasks = @user.tasks.ransack(params[:q]).result # search
+    pagy, tasks = pagy(@user.tasks.ransack(params[:q]).result) # search trc r phân trang
+    # @tasks = @user.tasks.all.limit(params[:limit]).offset(params[:offset]) # chỉ phân trang kiểu hàn lâm
+    # @tasks = @user.tasks.ransack(params[:q]).result.limit(params[:limit]).offset(params[:offset]) # phân trang kiểu hàn lâm & search
+    # render json: @tasks
+    render json: { data: tasks, pagy: serialize_pagy(pagy) }
   end
 
   # SHOW EACH TASKS (GET: /tasks/1)
@@ -51,5 +56,17 @@ class TasksController < ApplicationController
 
   def task_params
     params.require(:task).permit(:title, :descrip, :done, :deadline)
+  end
+
+  def serialize_pagy(pagy)
+    data = pagy_metadata pagy
+    {
+      current_page: data[:page],
+      next_page: data[:next],
+      prev_page: data[:prev],
+      total_pages: data[:pages],
+      total_count: data[:count],
+      per_page: data[:items]
+    }
   end
 end
