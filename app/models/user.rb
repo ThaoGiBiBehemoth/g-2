@@ -4,6 +4,7 @@ class User < ApplicationRecord
   validates :email,    presence: true, uniqueness: true, length: { maximum: 250 }, format: { with: URI::MailTo::EMAIL_REGEXP } # Thành
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
+  has_many :tasks
   # Returns the hash digest of the given string.
   def self.digest(string)
     cost = if ActiveModel::SecurePassword.min_cost
