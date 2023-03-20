@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  include Pagy::Backend
   def encode_token(payload)
     payload[:exp] =  30.days.after.to_i
     JWT.encode(payload, 'thaogibi')

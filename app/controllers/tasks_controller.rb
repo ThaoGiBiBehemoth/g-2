@@ -1,5 +1,4 @@
 class TasksController < ApplicationController
-  include Pagy::Backend
   before_action :authorize
   before_action :set_task, only: [:show, :update, :destroy]
 
